@@ -1,0 +1,32 @@
+{
+  "name": "entry-builder",
+  "version": "0.0.1",
+  "description": "An es module entry builder.",
+  "main": "index.js",
+  "bin": {
+    "entry-builder": "index.js"
+  },
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HaolinHom/entry-builder.git"
+  },
+  "keywords": [
+    "entry-builder",
+    "es-module-entry-builder",
+    "js-entry-builder"
+  ],
+  "author": "airCan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/HaolinHom/entry-builder/issues"
+  },
+  "homepage": "https://github.com/HaolinHom/entry-builder#readme",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "commander": "^5.1.0"
+  }
+}
