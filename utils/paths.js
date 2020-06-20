@@ -10,14 +10,19 @@ const configFilePath = path.join(currentPath, 'entry-builder-config.js');
 // 当前执行命令的.gitIgnore路径
 const gitIgnorePath = path.join(currentPath, '.gitignore');
 
+function removeExtname(argPath) {
+  let  extname = path.extname(argPath);
+  if (extname.length) {
+    argPath = argPath.slice(0, -(extname.length));
+  }
+  return argPath;
+}
+
 function getPath(argPath, options = {}) {
   const { noExtname } = options;
 
   if (noExtname) {
-    let  extname = path.extname(argPath);
-    if (extname.length) {
-      argPath = argPath.slice(0, -(extname.length));
-    }
+    argPath = removeExtname(argPath);
   }
 
   let tagPath = argPath.split(path.sep).join('/');
@@ -41,6 +46,7 @@ const paths = {
   currentDirName,
   configFilePath,
   gitIgnorePath,
+  removeExtname,
   getPath,
   getRelative,
 };

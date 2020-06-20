@@ -10,7 +10,7 @@ function getExportStatement(from, toList) {
       tempPath = path.relative(from, toList[i]);
       resource = paths.getPath(tempPath, { noExtname: true });
       result.push(
-        `export { default as ${path.basename(tempPath)} } from '${resource}';`
+        `export { default as ${path.basename(paths.removeExtname(tempPath))} } from '${resource}';`
       );
     }
   }
