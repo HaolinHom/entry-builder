@@ -4,7 +4,7 @@ const paths = require('./paths');
 function getExportStatement(from, toList) {
   let result = [];
 
-  let tempPath, extname, resource;
+  let tempPath, resource;
   for (let i = 0; i < toList.length; i++) {
     if (toList[i].length > 0) {
       tempPath = path.relative(from, toList[i]);
