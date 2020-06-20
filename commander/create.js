@@ -31,6 +31,7 @@ async function createCommand(commander) {
       message: 'Please select the entry directory path:',
       fileType: 'DIR',
       noPrefixDot: true,
+      root: true,
     }
   );
 
