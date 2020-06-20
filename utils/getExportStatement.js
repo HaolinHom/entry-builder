@@ -1,22 +1,16 @@
 const path = require('path');
+const paths = require('./paths');
 
 function getExportStatement(from, toList) {
   let result = [];
 
-  let temp, extname, resource;
+  let tempPath, extname, resource;
   for (let i = 0; i < toList.length; i++) {
     if (toList[i].length > 0) {
-      temp = path.relative(from, toList[i]);
-      extname = path.extname(temp);
-      if (extname.length) {
-        temp = temp.slice(0, -(extname.length));
-      }
-      resource = temp.split(path.sep).join('/');
-      if (/^[^.]/.test(resource)) {
-        resource = `./${resource}`;
-      }
+      tempPath = path.relative(from, toList[i]);
+      resource = paths.getPath(tempPath, { noExtname: true });
       result.push(
-        `import { default as ${path.basename(temp)} } from '${resource}';`
+        `import { default as ${path.basename(tempPath)} } from '${resource}';`
       );
     }
   }
