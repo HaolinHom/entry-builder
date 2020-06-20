@@ -2,12 +2,36 @@
 
 An es module entry builder.
 
-## entry-builder-config
+## Installation
 
-| 属性 | 描述 | | |
+```bash
+npm install entry-builder -g
+```
+
+## Usage
+
+### build command
+
+Generate entry file based on configuration file(entry-builder-config.js).
+
+```bash
+entry-builder
+```
+
+### create command
+
+Create config files manually.
+
+```bash
+entry-builder create
+```
+
+#### entry-builder-config
+
+| argument | description | type | default |
 |----|----|----|----|
-| entry | 入口 | string \| object | '' |
-| entry.path | 入口路径 | string | ''(e.g. './src') |
-| output | 输出 | string \| object | '' |
-| output.path | 输出路径 | string | ''(e.g. './') |
-| output.filename | 输出文件名 | string | 'index' |
+| entry | resource entry | string \| object | '' |
+| entry.path | resource entry directory path | string | ''(e.g. './src') |
+| output | output file | string \| object | '' |
+| output.path | output file path | string | ''(e.g. './') |
+| output.filename | output file name | string | 'index' |
