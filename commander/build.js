@@ -6,6 +6,7 @@ const validateConfig = require('../utils/validateConfig');
 const configAdapter = require('../utils/configAdapter');
 const getFileResource = require('../utils/getFileResource');
 const getExportStatement = require('../utils/getExportStatement');
+const createCommand = require('./create');
 
 async function buildCommand() {
   // 运行目录下是否有`entry-builder-config.js`
@@ -20,8 +21,7 @@ async function buildCommand() {
     }
     cfg = configAdapter(cfg);
   } else {
-    // TODO: 根据命令生成配置(可选: 为.gitignore添加忽略`entry-builder-config.js`的选项)
-    return std.warn('It\'s need config file!');
+    cfg = await createCommand();
   }
   // std.log('full config: ', cfg);
 
