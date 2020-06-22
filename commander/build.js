@@ -40,7 +40,7 @@ async function buildCommand() {
   const exportStatement = getExportStatement(
     outputPath,
     fileList
-      .map(filename => getFileResource(path.resolve(entryDirPath, filename), filename))
+      .map(filename => getFileResource(path.resolve(entryDirPath, filename)))
       .join('|')
       .split('|')
   );

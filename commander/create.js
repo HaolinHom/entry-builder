@@ -79,7 +79,7 @@ async function createCommand(commander) {
   }
 
   if (needCreateConfig) {
-    const packageJson = require(paths.packageJsonPath);
+    const packageJson = require('../package.json');
 
     const statement =
 `/**
