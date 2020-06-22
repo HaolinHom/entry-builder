@@ -4,16 +4,18 @@ const { prompt } = require('enquirer');
 const std = require('../utils/std');
 const paths = require('../utils/paths');
 const selectPath = require('../utils/selectPath');
+const CONFIG = require('../dict/common/CONFIG');
+const CREATE = require('../dict/commander/CREATE');
 
 async function createCommand(commander) {
   const isCfgExist = fs.existsSync(paths.configFilePath);
   if (isCfgExist) {
-    std.warn('entry-builder-config.js is already exist!\r\n');
+    std.warn(CREATE.WARN.CONFIG_FILE_EXIST);
 
     const { noRewrite } = await prompt({
       name: 'noRewrite',
       type: 'toggle',
-      message: 'Do you want to rewrite entry-builder-config.js?',
+      message: CREATE.PROMPT.REWRITE_CONFIG_FILE,
       initial: true,
       enabled: 'NO',
       disabled: 'YES',
@@ -23,12 +25,12 @@ async function createCommand(commander) {
     }
   }
 
-  std.info('creating entry-builder-config:');
+  std.info(CREATE.INFO.RUNNING);
 
   const entryPath = await selectPath(
     paths.currentPath,
     {
-      message: 'Please select the entry directory path:',
+      message: CREATE.PROMPT.SELECT_ENTRY_PATH,
       fileType: 'DIR',
       noPrefixDot: true,
       root: true,
@@ -38,7 +40,7 @@ async function createCommand(commander) {
   const outputPath = await selectPath(
     paths.currentPath,
     {
-      message: 'Please select the path you want to build an entry file:',
+      message: CREATE.PROMPT.SELECT_OUTPUT_PATH,
       fileType: 'DIR',
       noPrefixDot: true,
       root: true,
@@ -49,7 +51,7 @@ async function createCommand(commander) {
     type: 'input',
     name: 'outputFilename',
     initial: 'index',
-    message: 'Please enter the output file name:'
+    message: CREATE.PROMPT.INPUT_OUTPUT_FILENAME,
   });
 
   const config = {
@@ -68,7 +70,7 @@ async function createCommand(commander) {
     const { needCreate } = await prompt({
       name: 'needCreate',
       type: 'toggle',
-      message: 'Do you want to create a config file(entry-builder-config.js)?',
+      message: CREATE.PROMPT.TOGGLE_CREATE_CONFIG_FILE,
       initial: true,
       enabled: 'YES',
       disabled: 'NO',
@@ -77,13 +79,13 @@ async function createCommand(commander) {
   }
 
   if (needCreateConfig) {
-    const packageJson = require('../package.json');
+    const packageJson = require(paths.packageJsonPath);
 
     const statement =
 `/**
- * ${packageJson.name}-config
+ * ${CONFIG.FILENAME}
  *
- * Shell: ${packageJson.name} create
+ * bash: ${packageJson.name} create
  * Description: ${packageJson.description}
  * version: ${packageJson.version}
  * */
@@ -97,14 +99,14 @@ module.exports = {
   },
 };`;
 
-    fs.writeFileSync(path.join(paths.currentPath, 'entry-builder-config.js'), statement, { encoding: 'utf8' });
+    fs.writeFileSync(path.join(paths.currentPath, CONFIG.FILE), statement, { encoding: 'utf8' });
 
     const isIgnoreExist = fs.existsSync(paths.gitIgnorePath);
     if (isIgnoreExist) {
       const { addIgnore } = await prompt({
         name: 'addIgnore',
         type: 'toggle',
-        message: 'Do you want to add entry-builder-config.js in .gitignore?',
+        message: CREATE.PROMPT.TOGGLE_ADD_IN_GIT_IGNORE,
         initial: false,
         enabled: 'YES',
         disabled: 'NO',
@@ -112,14 +114,14 @@ module.exports = {
       if (addIgnore) {
         let ignoreContent = fs.readFileSync(paths.gitIgnorePath, { encoding: 'utf8' });
         ignoreContent += `
-# entry-builder
-entry-builder-config.js
+# ${packageJson.name}
+${CONFIG.FILE}
 `;
         fs.writeFileSync(paths.gitIgnorePath, ignoreContent, { encoding: 'utf8' });
       }
     }
 
-    std.success('entry-builder-config.js is created!');
+    std.success(CREATE.SUCCESS.FINISH_CREATE);
   }
 
   return config;

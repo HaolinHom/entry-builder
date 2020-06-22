@@ -1,14 +1,17 @@
 const path = require('path');
 const regexp = require('./regexp');
+const CONFIG = require('../dict/common/CONFIG');
 
 // 当前执行命令的路径
 const currentPath = process.cwd();
 // 当前执行命令的目录名称
 const currentDirName = path.basename(currentPath);
 // 当前执行命令的配置文件路径
-const configFilePath = path.join(currentPath, 'entry-builder-config.js');
+const configFilePath = path.join(currentPath, CONFIG.FILE);
 // 当前执行命令的.gitIgnore路径
-const gitIgnorePath = path.join(currentPath, '.gitignore');
+const gitIgnorePath = path.join(currentPath, CONFIG.GIT_IGNORE);
+//
+const packageJsonPath = path.join(currentPath, CONFIG.PACKAGE_JSON);
 
 function removeExtname(argPath) {
   let  extname = path.extname(argPath);
@@ -46,6 +49,7 @@ const paths = {
   currentDirName,
   configFilePath,
   gitIgnorePath,
+  packageJsonPath,
   removeExtname,
   getPath,
   getRelative,

@@ -1,6 +1,6 @@
 const { typeOf } = require('../utils/common');
 const std = require('../utils/std');
-const ERROR = require('../dict/config/ERROR');
+const ERROR = require('../dict/utils/ERROR');
 
 // 校验配置文件
 function validateConfig(cfg) {
