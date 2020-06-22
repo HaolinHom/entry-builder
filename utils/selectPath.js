@@ -3,6 +3,15 @@ const path = require('path');
 const { prompt } = require('enquirer');
 const regexp = require('../utils/regexp');
 
+
+const DICT = {
+  ROOT: './',
+  CONFIRM: '[Confirm]',
+  RETURN: '[Return]',
+  ALL: 'ALL',
+  DIR: 'DIR',
+};
+
 /**
  * @param basePath {string}
  * @param options {object?}
@@ -10,13 +19,14 @@ const regexp = require('../utils/regexp');
  * @param options.fileType {string?} ('ALL', 'DIR')
  * @param options.noPrefixDot {boolean?}
  * @param options.root {boolean?}
+ * @param options.history {Array?}
  * */
 async function selectPath(basePath, options = {}) {
-  const { message, fileType = 'ALL', noPrefixDot, root } = options;
+  const { message, fileType = DICT.ALL, noPrefixDot, root, history = [] } = options;
 
   let fileList = fs.readdirSync(basePath);
 
-  if (fileType === 'DIR') {
+  if (fileType === DICT.DIR) {
     fileList = fileList.filter((filename) => {
       const _path = path.join(basePath, filename);
       const _stat = fs.statSync(_path);
@@ -28,37 +38,38 @@ async function selectPath(basePath, options = {}) {
     fileList = fileList.filter(filename => regexp.noPrefixDot.test(filename));
   }
 
-  if (root) {
-    fileList.unshift('./');
+  if (root && (!history || Array.isArray(history) && history.length === 0)) {
+    fileList.unshift(DICT.ROOT);
   }
 
-  const { selectPath } = await prompt({
+  if (Array.isArray(history) && history.length > 0) {
+    fileList.unshift(DICT.CONFIRM);
+    fileList.push(DICT.RETURN);
+  }
+
+  const { selected } = await prompt({
     type: 'select',
-    name: 'selectPath',
+    name: 'selected',
     message: message || 'Please select the path:',
     choices: fileList,
   });
 
-  if (selectPath === './') {
+  if (selected === DICT.ROOT || selected === DICT.CONFIRM) {
     return basePath;
+  } else if (selected === DICT.RETURN) {
+    const popped = options.history.pop();
+    return await selectPath(popped, options);
   }
 
-  const tagPath = path.resolve(basePath, selectPath);
+  const tagPath = path.resolve(basePath, selected);
   const tagStat = fs.statSync(tagPath);
 
   if (tagStat.isDirectory()) {
-    const { isContinue } = await prompt({
-      type: 'toggle',
-      name: 'isContinue',
-      message: 'Continue to Select?',
-      initial: 'YES',
-      enabled: 'YES',
-      disabled: 'NO',
-    });
-    if (isContinue) {
-      delete options.root;
-      return await selectModule(tagPath, options);
+    if (!Array.isArray(options.history)) {
+      options.history = [];
     }
+    options.history.push(basePath);
+    return await selectPath(tagPath, options);
   }
 
   return tagPath;
