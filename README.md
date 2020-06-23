@@ -35,3 +35,4 @@ entry-builder create
 | output | output file | string \| object | '' |
 | output.path | output file path | string | ''(e.g. './') |
 | output.filename | output file name | string | 'index' |
+| ignorePath | ignore some directory or file in entry path | array? | [] |
