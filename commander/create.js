@@ -103,11 +103,9 @@ async function createCommand(commander) {
 
     const statement =
 `/**
- * ${CONFIG.FILENAME}
- *
- * bash: ${packageJson.name} create
+ * ${packageJson.name}
  * Description: ${packageJson.description}
- * version: ${packageJson.version}
+ * Homepage: ${packageJson.homepage}
  * */
 module.exports = {
   entry: {
