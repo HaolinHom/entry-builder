@@ -34,7 +34,10 @@ async function buildCommand() {
 
   let exportStatement = [];
   try {
-    exportStatement = getExportStatement(outputPath, getResource(entryDirPath));
+    exportStatement = getExportStatement(
+      outputPath,
+      getResource(entryDirPath, { ignorePath: cfg.ignorePath })
+    );
   } catch (e) {
     return std.error(e);
   }
