@@ -3,7 +3,6 @@ const path = require('path');
 const { prompt } = require('enquirer');
 const regexp = require('../utils/regexp');
 
-
 const DICT = {
   ROOT: './',
   CONFIRM: '[Confirm]',
@@ -11,6 +10,13 @@ const DICT = {
   ALL: 'ALL',
   DIR: 'DIR',
 };
+
+function promptMsgAdapter(msg, history) {
+  if (Array.isArray(history) && history.length > 0) {
+    return `${msg}(${history[history.length - 1].selected})`;
+  }
+  return msg;
+}
 
 /**
  * @param basePath {string}
@@ -50,7 +56,7 @@ async function selectPath(basePath, options = {}) {
   const { selected } = await prompt({
     type: 'select',
     name: 'selected',
-    message: message || 'Please select the path:',
+    message: promptMsgAdapter(message || 'Please select the path:', history),
     choices: fileList,
   });
 
@@ -58,7 +64,7 @@ async function selectPath(basePath, options = {}) {
     return basePath;
   } else if (selected === DICT.RETURN) {
     const popped = options.history.pop();
-    return await selectPath(popped, options);
+    return await selectPath(popped.option, options);
   }
 
   const tagPath = path.resolve(basePath, selected);
@@ -68,7 +74,10 @@ async function selectPath(basePath, options = {}) {
     if (!Array.isArray(options.history)) {
       options.history = [];
     }
-    options.history.push(basePath);
+    options.history.push({
+      option: basePath,
+      selected: tagPath,
+    });
     return await selectPath(tagPath, options);
   }
 
