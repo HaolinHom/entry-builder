@@ -1,8 +1,17 @@
 const path = require('path');
 const fs = require('fs');
 const regexp = require('./regexp');
+const paths = require('./paths');
 
 function getDirResource(dirPath, options) {
+  if (
+    options.ignorePath.length > 0
+    &&
+    options.ignorePath.includes(paths.getRelative(options.basePath, dirPath))
+  ) {
+    return '';
+  }
+
   let fileList = fs.readdirSync(dirPath);
 
   const indexJs = fileList.find(filename => regexp.indexJs.test(filename));
@@ -25,6 +34,13 @@ function getDirResource(dirPath, options) {
 }
 
 function getFileResource(filePath, options) {
+  if (
+    options.ignorePath.length > 0
+    &&
+    options.ignorePath.includes(paths.getRelative(options.basePath, filePath))
+  ) {
+    return '';
+  }
   const stat = fs.statSync(filePath);
 
   if (stat.isFile()) {
@@ -42,6 +58,7 @@ function getFileResource(filePath, options) {
  * @param options.onlyFile {boolean?}
  * @param options.onlyDirectory {boolean?}
  * @param options.ignoreFile {Array?}
+ * @param options.ignorePath {Array?}
  * */
 function getResource(basePath, options = {}) {
   if (options.onlyFile && options.onlyDirectory) {
@@ -50,15 +67,18 @@ function getResource(basePath, options = {}) {
   if (!Array.isArray(options.ignoreFile)) {
     options.ignoreFile = [];
   }
+  if (!Array.isArray(options.ignorePath)) {
+    options.ignorePath = [];
+  }
+  options.basePath = basePath;
 
   const fileList = fs.readdirSync(basePath);
   if (fileList.length === 0) {
     throw `There are no such file in ${basePath}!`;
   }
-
   return fileList
     .map((filename) => {
-      if (options.ignoreFile.includes(filename)) {
+      if (options.ignoreFile.length > 0 && options.ignoreFile.includes(filename)) {
         return '';
       }
       return getFileResource(path.resolve(basePath, filename), options);
