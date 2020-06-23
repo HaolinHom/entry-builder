@@ -9,6 +9,17 @@ const getExportStatement = require('../utils/getExportStatement');
 const createCommand = require('./create');
 const BUILD = require('../dict/commander/BUILD');
 
+function getResource(basePath) {
+  const fileList = fs.readdirSync(basePath);
+  if (fileList.length === 0) {
+    throw BUILD.ERROR.NO_FILE_IN_ENTRY_PATH;
+  }
+  return fileList
+    .map(filename => getFileResource(path.resolve(basePath, filename)))
+    .join('|')
+    .split('|');
+}
+
 async function buildCommand() {
   const isCfgExist = fs.existsSync(paths.configFilePath);
 
@@ -32,18 +43,12 @@ async function buildCommand() {
     return std.error(BUILD.ERROR.ENTRY_DIR_NOT_EXIST);
   }
 
-  const fileList = fs.readdirSync(entryDirPath);
-  if (fileList.length === 0) {
-    return std.error(BUILD.ERROR.NO_FILE_IN_ENTRY_PATH);
+  let exportStatement = [];
+  try {
+    exportStatement = getExportStatement(outputPath, getResource(entryDirPath));
+  } catch (e) {
+    return std.error(e);
   }
-
-  const exportStatement = getExportStatement(
-    outputPath,
-    fileList
-      .map(filename => getFileResource(path.resolve(entryDirPath, filename)))
-      .join('|')
-      .split('|')
-  );
   if (exportStatement.length === 0) {
     return std.error(BUILD.ERROR.NO_NEED_BUILD);
   }
