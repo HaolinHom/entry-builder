@@ -31,4 +31,15 @@ function getFileResource(filePath) {
   return null;
 }
 
-module.exports = getFileResource;
+function getResource(basePath) {
+  const fileList = fs.readdirSync(basePath);
+  if (fileList.length === 0) {
+    throw `There are no such file in ${basePath}!`;
+  }
+  return fileList
+    .map(filename => getFileResource(path.resolve(basePath, filename)))
+    .join('|')
+    .split('|');
+}
+
+module.exports = getResource;

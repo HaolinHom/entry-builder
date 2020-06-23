@@ -4,21 +4,10 @@ const std = require('../utils/std');
 const paths = require('../utils/paths');
 const validateConfig = require('../utils/validateConfig');
 const configAdapter = require('../utils/configAdapter');
-const getFileResource = require('../utils/getFileResource');
+const getResource = require('../utils/getResource');
 const getExportStatement = require('../utils/getExportStatement');
 const createCommand = require('./create');
 const BUILD = require('../dict/commander/BUILD');
-
-function getResource(basePath) {
-  const fileList = fs.readdirSync(basePath);
-  if (fileList.length === 0) {
-    throw BUILD.ERROR.NO_FILE_IN_ENTRY_PATH;
-  }
-  return fileList
-    .map(filename => getFileResource(path.resolve(basePath, filename)))
-    .join('|')
-    .split('|');
-}
 
 async function buildCommand() {
   const isCfgExist = fs.existsSync(paths.configFilePath);
