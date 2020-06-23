@@ -1,6 +1,6 @@
 # entry-builder
 
-An es module entry builder.
+An es module entry builder. Only support js file now.
 
 ## Installation
 
