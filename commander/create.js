@@ -6,6 +6,7 @@ const paths = require('../utils/paths');
 const selectPath = require('../utils/selectPath');
 const CONFIG = require('../dict/common/CONFIG');
 const CREATE = require('../dict/commander/CREATE');
+const getResource = require('../utils/getResource');
 
 async function createCommand(commander) {
   const isCfgExist = fs.existsSync(paths.configFilePath);
@@ -27,6 +28,7 @@ async function createCommand(commander) {
 
   std.info(CREATE.INFO.RUNNING);
 
+  // config.entry
   const entryPath = await selectPath(
     paths.currentPath,
     {
@@ -37,6 +39,7 @@ async function createCommand(commander) {
     }
   );
 
+  // config.output
   const outputPath = await selectPath(
     paths.currentPath,
     {
@@ -46,7 +49,6 @@ async function createCommand(commander) {
       root: true,
     }
   );
-
   const { outputFilename } = await prompt({
     type: 'input',
     name: 'outputFilename',
@@ -56,13 +58,31 @@ async function createCommand(commander) {
 
   const config = {
     entry: {
-      path: paths.getRelative(paths.currentPath, entryPath)
+      path: paths.getRelative(paths.currentPath, entryPath),
     },
     output: {
       path: paths.getRelative(paths.currentPath, outputPath),
-      filename: outputFilename
+      filename: outputFilename,
     },
+    ignorePath: [].concat(CONFIG.DEFAULT_IGNORE_PATH),
   };
+
+  // config.ignorePath
+  if (paths.currentPath === path.resolve(paths.currentPath, config.entry.path)) {
+    try {
+      const currentResource = getResource(
+        paths.currentPath,
+        { onlyFile: true, ignoreFile: CONFIG.DEFAULT_IGNORE_FILE },
+      );
+      currentResource.forEach((resourcePath) => {
+        config.ignorePath.push(paths.getRelative(paths.currentPath, resourcePath));
+      });
+    } catch (e) {
+      return std.error(e);
+    }
+  }
+
+  std.log('config: ', config);
 
   let needCreateConfig = true;
 
@@ -97,6 +117,11 @@ module.exports = {
     path: '${config.output.path}',
     filename: '${config.output.filename}',
   },
+  ignorePath: [
+${config.ignorePath.map(item => 
+`    '${item}',`
+).join('\r\n')}
+  ],
 };`;
 
     fs.writeFileSync(path.join(paths.currentPath, CONFIG.FILE), statement, { encoding: 'utf8' });
@@ -113,7 +138,8 @@ module.exports = {
       });
       if (addIgnore) {
         let ignoreContent = fs.readFileSync(paths.gitIgnorePath, { encoding: 'utf8' });
-        ignoreContent += `
+        ignoreContent +=
+`
 # ${packageJson.name}
 ${CONFIG.FILE}
 `;
