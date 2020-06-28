@@ -2,12 +2,12 @@ const { typeOf } = require('../utils/common');
 const std = require('../utils/std');
 const ERROR = require('../dict/utils/ERROR');
 
-// 校验配置文件
+// Verify configuration file
 function validateConfig(cfg) {
   if (cfg) {
     let result = true;
 
-    // TODO: 校验 path, filename 是否合法
+    // TODO: Verify path, filename is it allow
 
     const entryType = typeOf(cfg.entry);
     if (entryType === 'undefined') {

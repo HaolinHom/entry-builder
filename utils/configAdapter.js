@@ -1,7 +1,6 @@
 const { typeOf } = require('../utils/common');
 const CONFIG = require('../dict/common/CONFIG');
 
-// 配置设配器
 function configAdapter(cfg) {
   if (typeOf(cfg.entry) === 'string') {
     cfg.entry = {

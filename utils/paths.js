@@ -2,15 +2,15 @@ const path = require('path');
 const regexp = require('./regexp');
 const CONFIG = require('../dict/common/CONFIG');
 
-// 当前执行命令的路径
+// Path of currently executing command
 const currentPath = process.cwd();
-// 当前执行命令的目录名称
+// The name of the directory currently executing the command
 const currentDirName = path.basename(currentPath);
-// 当前执行命令的配置文件路径
+// The path of the configuration file of the currently executing command
 const configFilePath = path.join(currentPath, CONFIG.FILE);
-// 当前执行命令的.gitIgnore路径
+// The .gitignore path of the currently executing command
 const gitIgnorePath = path.join(currentPath, CONFIG.GIT_IGNORE);
-//
+// The package.json path of the currently executing command
 const packageJsonPath = path.join(currentPath, CONFIG.PACKAGE_JSON);
 
 function removeExtname(argPath) {
