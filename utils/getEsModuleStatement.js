@@ -1,7 +1,7 @@
 const path = require('path');
 const paths = require('./paths');
 
-function getExportStatement(from, toList) {
+function getEsModuleStatement(from, toList) {
   let result = [];
 
   let tempPath, resource;
@@ -15,7 +15,11 @@ function getExportStatement(from, toList) {
     }
   }
 
-  return result;
+  if (result.length === 0) {
+    return '';
+  }
+
+  return result.join('\r\n\r\n');
 }
 
-module.exports = getExportStatement;
+module.exports = getEsModuleStatement;
