@@ -12,4 +12,8 @@ module.exports = {
   CONFIG_OUTPUT_PATH_NOT_STRING: 'Config\'s entry.path must be a string!',
   CONFIG_OUTPUT_PATH_NOT_EXIST: 'Config\'s entry.path isn\'t existed!',
   CONFIG_OUTPUT_FILENAME_NOT_STRING: 'Config\'s entry.filename must be a string!',
+
+  CONFIG_MODULE_TYPE_NOT_EXIST: 'Config\'s moduleType isn\'t existed!',
+  CONFIG_MODULE_TYPE_NOT_STRING: 'Config\'s moduleType must be a string!',
+  CONFIG_MODULE_TYPE_ILLEGAL: 'Config\'s moduleType is illegal!'
 };
