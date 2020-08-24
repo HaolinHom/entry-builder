@@ -7,7 +7,8 @@ module.exports = {
     SELECT_OUTPUT_PATH: 'Please select the path you want to build an entry file: ',
     INPUT_OUTPUT_FILENAME: 'Please enter the output file name: ',
     TOGGLE_CREATE_CONFIG_FILE: `Do you want to create a config file(${CONFIG.FILE})?`,
-    TOGGLE_ADD_IN_GIT_IGNORE: `Do you want to add ${CONFIG.FILE} in ${CONFIG.GIT_IGNORE}?`
+    TOGGLE_ADD_IN_GIT_IGNORE: `Do you want to add ${CONFIG.FILE} in ${CONFIG.GIT_IGNORE}?`,
+    SELECT_MODULE_TYPE: 'Please select the module type: ',
   },
   INFO: {
     RUNNING: `Creating ${CONFIG.FILENAME}:`,

@@ -56,6 +56,15 @@ async function createCommand(commander) {
     message: CREATE.PROMPT.INPUT_OUTPUT_FILENAME,
   });
 
+  // config.moduleType
+  const { moduleType } = await prompt({
+    name: 'moduleType',
+    type: 'select',
+    message: CREATE.PROMPT.SELECT_MODULE_TYPE,
+    choices: [CONFIG.ES_MODULE, CONFIG.NODE_MODULE],
+    initial: CONFIG.ES_MODULE,
+  });
+
   const config = {
     entry: {
       path: paths.getRelative(paths.currentPath, entryPath),
@@ -64,6 +73,7 @@ async function createCommand(commander) {
       path: paths.getRelative(paths.currentPath, outputPath),
       filename: outputFilename,
     },
+    moduleType: moduleType,
     ignorePath: [].concat(CONFIG.DEFAULT_IGNORE_PATH),
   };
 
@@ -115,6 +125,7 @@ module.exports = {
     path: '${config.output.path}',
     filename: '${config.output.filename}',
   },
+  moduleType: '${config.moduleType}',
   ignorePath: [
 ${config.ignorePath.map(item => 
 `    '${item}',`
