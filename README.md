@@ -1,6 +1,8 @@
 # entry-builder
 
-An es module entry builder. Only support js file now.
+Entry-builder is a tool can automatic generate es or node module's entry file.
+
+Only support js file now.
 
 ## Installation
 
@@ -30,9 +32,10 @@ entry-builder create
 
 | argument | description | type | default |
 |----|----|----|----|
-| entry | resource entry | string \| object | '' |
+| entry | resource entry | string | object | '' |
 | entry.path | resource entry directory path | string | ''(e.g. './src') |
-| output | output file | string \| object | '' |
+| output | output file | string | object | '' |
 | output.path | output file path | string | ''(e.g. './') |
 | output.filename | output file name | string | 'index' |
+| moduleType | es-module or node-module | string | 'es' (or 'node') |
 | ignorePath | ignore some directory or file in entry path | array? | [] |
