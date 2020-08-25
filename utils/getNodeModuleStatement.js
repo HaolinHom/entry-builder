@@ -25,7 +25,7 @@ function getNodeModuleStatement(from, toList) {
 `
 
 module.exports = {
-  ${modules.join(`,\r\n\t`)}
+  ${modules.join(`,\r\n\t`)},
 };`;
 }
 
