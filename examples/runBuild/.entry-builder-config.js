@@ -1,9 +1,7 @@
 /**
- * .entry-builder-config
- *
- * bash: entry-builder create
- * Description: An es module entry builder.
- * version: 0.0.1
+ * entry-builder
+ * Description: Entry-builder is a tool can automatic generate es or node module's entry file.
+ * Homepage: https://github.com/HaolinHom/entry-builder#readme
  * */
 module.exports = {
   entry: {
@@ -13,6 +11,7 @@ module.exports = {
     path: './',
     filename: 'index',
   },
+  moduleType: 'es',
   ignorePath: [
     './.git',
     './.idea',
