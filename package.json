@@ -4,7 +4,8 @@
   "description": "Entry-builder is a tool can automatic generate es or node module's entry file.",
   "main": "index.js",
   "bin": {
-    "entry-builder": "index.js"
+    "entry-builder": "index.js",
+    "entrybuild": "index.js"
   },
   "engines": {
     "node": ">=10.0.0",
