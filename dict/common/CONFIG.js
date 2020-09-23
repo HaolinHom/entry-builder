@@ -7,5 +7,5 @@ module.exports = {
   DEFAULT_IGNORE_FILE: ['.git', '.idea'],
   DEFAULT_IGNORE_PATH: ['./.git', './.idea'],
   ES_MODULE: 'es',
-  NODE_MODULE: 'node',
+  COMMONJS: 'cjs',
 };

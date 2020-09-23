@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/HaolinHom/entry-builder#readme",
   "dependencies": {
+    "chalk": "^4.1.0",
     "commander": "^5.1.0",
     "enquirer": "^2.3.5",
     "std-terminal-logger": "^1.0.0"

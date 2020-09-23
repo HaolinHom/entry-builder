@@ -1,7 +1,7 @@
 const path = require('path');
 const paths = require('./paths');
 
-function getNodeModuleStatement(from, toList) {
+function getCommonjsStatement(from, toList) {
   let requires = [];
   let modules = [];
 
@@ -30,4 +30,4 @@ module.exports = {
 }
 
 
-module.exports = getNodeModuleStatement;
+module.exports = getCommonjsStatement;

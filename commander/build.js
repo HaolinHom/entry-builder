@@ -6,7 +6,7 @@ const validateConfig = require('../utils/validateConfig');
 const configAdapter = require('../utils/configAdapter');
 const getResource = require('../utils/getResource');
 const getEsModuleStatement = require('../utils/getEsModuleStatement');
-const getNodeModuleStatement = require('../utils/getNodeModuleStatement');
+const getCommonjsStatement = require('../utils/getCommonjsStatement');
 const createCommand = require('./create');
 const BUILD = require('../dict/commander/BUILD');
 const CONFIG = require('../dict/common/CONFIG');
@@ -36,7 +36,7 @@ async function buildCommand() {
 
   let exportStatement = [];
 
-  let getExportStatement = cfg.moduleType === CONFIG.ES_MODULE ? getEsModuleStatement : getNodeModuleStatement;
+  let getExportStatement = cfg.moduleType === CONFIG.ES_MODULE ? getEsModuleStatement : getCommonjsStatement;
 
   try {
     exportStatement = getExportStatement(
@@ -50,7 +50,9 @@ async function buildCommand() {
     return std.error(BUILD.ERROR.NO_NEED_BUILD);
   }
 
-  const outputFilePath = path.resolve(outputPath, `${cfg.output.filename}.js`);
+  const filename = /^\.[a-z]*$/.test(path.extname(cfg.output.filename)) ? cfg.output.filename : `${cfg.output.filename}.js`;
+
+  const outputFilePath = path.resolve(outputPath, filename);
 
   fs.writeFileSync(outputFilePath, exportStatement, { encoding: 'utf8' });
 

@@ -58,8 +58,8 @@ function validateConfig(cfg) {
     } else if (moduleType !== 'string') {
       std.error(ERROR.CONFIG_MODULE_TYPE_NOT_STRING);
       result = false;
-    } else if (![CONFIG.ES_MODULE, CONFIG.NODE_MODULE].includes(cfg.moduleType)) {
-      std.error(`${ERROR.CONFIG_MODULE_TYPE_ILLEGAL}(must be 'es' or 'node')`);
+    } else if (![CONFIG.ES_MODULE, CONFIG.COMMONJS].includes(cfg.moduleType)) {
+      std.error(`${ERROR.CONFIG_MODULE_TYPE_ILLEGAL}`);
       result = false;
     }
 

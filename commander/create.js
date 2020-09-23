@@ -52,7 +52,7 @@ async function createCommand(commander) {
   const { outputFilename } = await prompt({
     type: 'input',
     name: 'outputFilename',
-    initial: 'index',
+    initial: 'index.js',
     message: CREATE.PROMPT.INPUT_OUTPUT_FILENAME,
   });
 
@@ -61,7 +61,7 @@ async function createCommand(commander) {
     name: 'moduleType',
     type: 'select',
     message: CREATE.PROMPT.SELECT_MODULE_TYPE,
-    choices: [CONFIG.ES_MODULE, CONFIG.NODE_MODULE],
+    choices: [CONFIG.ES_MODULE, CONFIG.COMMONJS],
     initial: CONFIG.ES_MODULE,
   });
 
@@ -92,7 +92,7 @@ async function createCommand(commander) {
     }
   }
 
-  std.log('config: ', config);
+  std.label('config')(config);
 
   let needCreateConfig = true;
 
@@ -111,50 +111,11 @@ async function createCommand(commander) {
   if (needCreateConfig) {
     const packageJson = require('../package.json');
 
-    const statement =
-`/**
- * ${packageJson.name}
- * Description: ${packageJson.description}
- * Homepage: ${packageJson.homepage}
- * */
-module.exports = {
-  entry: {
-    path: '${config.entry.path}',
-  },
-  output: {
-    path: '${config.output.path}',
-    filename: '${config.output.filename}',
-  },
-  moduleType: '${config.moduleType}',
-  ignorePath: [
-${config.ignorePath.map(item => 
-`    '${item}',`
-).join('\r\n')}
-  ],
-};`;
-
-    fs.writeFileSync(path.join(paths.currentPath, CONFIG.FILE), statement, { encoding: 'utf8' });
-
-    const isIgnoreExist = fs.existsSync(paths.gitIgnorePath);
-    if (isIgnoreExist) {
-      const { addIgnore } = await prompt({
-        name: 'addIgnore',
-        type: 'toggle',
-        message: CREATE.PROMPT.TOGGLE_ADD_IN_GIT_IGNORE,
-        initial: false,
-        enabled: 'YES',
-        disabled: 'NO',
-      });
-      if (addIgnore) {
-        let ignoreContent = fs.readFileSync(paths.gitIgnorePath, { encoding: 'utf8' });
-        ignoreContent +=
-`
-# ${packageJson.name}
-${CONFIG.FILE}
-`;
-        fs.writeFileSync(paths.gitIgnorePath, ignoreContent, { encoding: 'utf8' });
-      }
-    }
+    fs.writeFileSync(
+      path.join(paths.currentPath, CONFIG.FILE),
+      `module.exports = ${JSON.stringify(config, null, 2)};`,
+      { encoding: 'utf8' }
+    );
 
     std.success(CREATE.SUCCESS.FINISH_CREATE);
   }

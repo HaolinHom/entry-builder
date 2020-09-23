@@ -1,3 +1,4 @@
+const CONFIG = require('../common/CONFIG');
 
 module.exports = {
   CONFIG_NOT_EXIST: 'Config isn\'t existed!',
@@ -15,5 +16,5 @@ module.exports = {
 
   CONFIG_MODULE_TYPE_NOT_EXIST: 'Config\'s moduleType isn\'t existed!',
   CONFIG_MODULE_TYPE_NOT_STRING: 'Config\'s moduleType must be a string!',
-  CONFIG_MODULE_TYPE_ILLEGAL: 'Config\'s moduleType is illegal!'
+  CONFIG_MODULE_TYPE_ILLEGAL: `Config's moduleType is illegal! (must be ${CONFIG.ES_MODULE} or ${CONFIG.COMMONJS})`,
 };
