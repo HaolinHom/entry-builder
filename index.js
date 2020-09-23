@@ -11,6 +11,9 @@ const create = require('./commander/create');
 const entryBuilder = new commander
   .Command(packageJson.name)
   .version(packageJson.version)
+  .option('-i, --input <dirPath>', 'Input directory')
+  .option('-o, --output <filePath>', 'Single output file')
+  .option('-f, --format <moduleType>', 'Module Type of output (es, cjs)')
   .action(build);
 
 entryBuilder

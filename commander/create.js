@@ -8,7 +8,7 @@ const CONFIG = require('../dict/common/CONFIG');
 const CREATE = require('../dict/commander/CREATE');
 const getResource = require('../utils/getResource');
 
-async function createCommand(commander) {
+async function createCommand(options, canChooseCreateFile) {
   const isCfgExist = fs.existsSync(paths.configFilePath);
   if (isCfgExist) {
     std.warn(CREATE.WARN.CONFIG_FILE_EXIST);
@@ -29,7 +29,7 @@ async function createCommand(commander) {
   std.info(CREATE.INFO.RUNNING);
 
   // config.entry
-  const entryPath = await selectPath(
+  const entryPath = options.input || await selectPath(
     paths.currentPath,
     {
       message: CREATE.PROMPT.SELECT_ENTRY_PATH,
@@ -39,8 +39,11 @@ async function createCommand(commander) {
     }
   );
 
+  const optOutputParse = path.parse(options.output || '');
+  const optOutputDir = options.output ? optOutputParse.dir || './' : null;
+  const optOutputBase = optOutputParse.base ? { outputFilename: optOutputParse.base } : null;
   // config.output
-  const outputPath = await selectPath(
+  const outputPath = optOutputDir || await selectPath(
     paths.currentPath,
     {
       message: CREATE.PROMPT.SELECT_OUTPUT_PATH,
@@ -49,15 +52,17 @@ async function createCommand(commander) {
       root: true,
     }
   );
-  const { outputFilename } = await prompt({
+  const { outputFilename } = optOutputBase || await prompt({
     type: 'input',
     name: 'outputFilename',
     initial: 'index.js',
     message: CREATE.PROMPT.INPUT_OUTPUT_FILENAME,
   });
 
+  const optFormat = options.format && [CONFIG.ES_MODULE, CONFIG.COMMONJS].includes(options.format) ?
+    { moduleType: options.format } : null;
   // config.moduleType
-  const { moduleType } = await prompt({
+  const { moduleType } = optFormat || await prompt({
     name: 'moduleType',
     type: 'select',
     message: CREATE.PROMPT.SELECT_MODULE_TYPE,
@@ -96,7 +101,7 @@ async function createCommand(commander) {
 
   let needCreateConfig = true;
 
-  if (!commander) {
+  if (canChooseCreateFile) {
     const { needCreate } = await prompt({
       name: 'needCreate',
       type: 'toggle',

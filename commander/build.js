@@ -2,29 +2,35 @@ const fs = require('fs');
 const path = require('path');
 const std = require('std-terminal-logger');
 const paths = require('../utils/paths');
+const mergeOptionToConfig = require('../utils/mergeOptionToConfig');
 const validateConfig = require('../utils/validateConfig');
 const configAdapter = require('../utils/configAdapter');
 const getResource = require('../utils/getResource');
+const regexp = require('../utils/regexp');
 const getEsModuleStatement = require('../utils/getEsModuleStatement');
 const getCommonjsStatement = require('../utils/getCommonjsStatement');
 const createCommand = require('./create');
 const BUILD = require('../dict/commander/BUILD');
 const CONFIG = require('../dict/common/CONFIG');
 
-async function buildCommand() {
-  const isCfgExist = fs.existsSync(paths.configFilePath);
+async function buildCommand(options) {
+  let isCfgExist = fs.existsSync(paths.configFilePath);
+
+  const isHadOptions = !isCfgExist && options.input && options.output && options.format;
 
   let cfg;
-  if (isCfgExist) {
-    cfg = require(paths.configFilePath);
+  if (isCfgExist || isHadOptions) {
+    cfg = isCfgExist ? require(paths.configFilePath) : require('../dict/common/defaultConfig');
+    cfg = mergeOptionToConfig(options, cfg);
+
     if (!validateConfig(cfg)) {
       return;
     }
     cfg = configAdapter(cfg);
   } else {
-    cfg = await createCommand();
+    const canChooseCreateFile = true;
+    cfg = await createCommand(options, canChooseCreateFile);
   }
-  // std.log('full config: ', cfg);
 
   const outputPath = path.resolve(paths.currentPath, cfg.output.path);
   const entryDirPath = path.resolve(paths.currentPath, cfg.entry.path);
@@ -50,7 +56,7 @@ async function buildCommand() {
     return std.error(BUILD.ERROR.NO_NEED_BUILD);
   }
 
-  const filename = /^\.[a-z]*$/.test(path.extname(cfg.output.filename)) ? cfg.output.filename : `${cfg.output.filename}.js`;
+  const filename = regexp.extname.test(path.extname(cfg.output.filename)) ? cfg.output.filename : `${cfg.output.filename}.js`;
 
   const outputFilePath = path.resolve(outputPath, filename);
 
