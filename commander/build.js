@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const std = require('../utils/std');
+const std = require('std-terminal-logger');
 const paths = require('../utils/paths');
 const validateConfig = require('../utils/validateConfig');
 const configAdapter = require('../utils/configAdapter');

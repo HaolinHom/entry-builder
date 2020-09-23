@@ -29,6 +29,7 @@
   "dependencies": {
     "colors": "^1.4.0",
     "commander": "^5.1.0",
-    "enquirer": "^2.3.5"
+    "enquirer": "^2.3.5",
+    "std-terminal-logger": "^1.0.0"
   }
 }

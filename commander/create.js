@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { prompt } = require('enquirer');
-const std = require('../utils/std');
+const std = require('std-terminal-logger');
 const paths = require('../utils/paths');
 const selectPath = require('../utils/selectPath');
 const CONFIG = require('../dict/common/CONFIG');

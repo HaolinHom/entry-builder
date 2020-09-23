@@ -1,5 +1,5 @@
 const { typeOf } = require('../utils/common');
-const std = require('../utils/std');
+const std = require('std-terminal-logger');
 const ERROR = require('../dict/utils/ERROR');
 const CONFIG = require('../dict/common/CONFIG');
 
