@@ -1,6 +1,6 @@
 {
   "name": "entry-builder",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Entry-builder is a tool can automatic generate es or node module's entry file.",
   "main": "index.js",
   "bin": {
