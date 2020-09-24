@@ -1,6 +1,5 @@
 const path = require('path');
 const CONFIG = require('../dict/common/CONFIG');
-const std = require('std-terminal-logger');
 
 function mergeOptionToConfig({ input, output, format }, config) {
   if (input) {

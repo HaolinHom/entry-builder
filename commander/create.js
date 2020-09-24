@@ -114,14 +114,11 @@ async function createCommand(options, canChooseCreateFile) {
   }
 
   if (needCreateConfig) {
-    const packageJson = require('../package.json');
-
     fs.writeFileSync(
       path.join(paths.currentPath, CONFIG.FILE),
       `module.exports = ${JSON.stringify(config, null, 2)};`,
       { encoding: 'utf8' }
     );
-
     std.success(CREATE.SUCCESS.FINISH_CREATE);
   }
 
