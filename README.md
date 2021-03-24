@@ -52,4 +52,5 @@ entry-builder create
 | output.path | output file path | string | ''(e.g. './') |
 | output.filename | output file name | string | 'index' |
 | moduleType | es-module or node-module | string | 'es' (or 'node') |
-| ignorePath | ignore some directory or file in entry path | array? | [] |
+| ignorePath | ignore some directory or file in entry path | string? / array? | [] |
+| ignoreFile | ignore some directory or file in entry path | string? / array? | [] |

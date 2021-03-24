@@ -18,49 +18,52 @@ async function buildCommand(options) {
 
   const isHadOptions = !isCfgExist && options.input && options.output && options.format;
 
-  let cfg;
+  let config;
   if (isCfgExist || isHadOptions) {
-    cfg = isCfgExist ? require(paths.configFilePath) : require('../dict/common/defaultConfig');
-    cfg = mergeOptionToConfig(options, cfg);
+    config = isCfgExist ? require(paths.configFilePath) : require('../dict/common/defaultConfig');
+    config = mergeOptionToConfig(options, config);
 
-    if (!validateConfig(cfg)) {
+    if (!validateConfig(config)) {
       return;
     }
-    cfg = configAdapter(cfg);
+    config = configAdapter(config);
   } else {
     const canChooseCreateFile = true;
-    cfg = await createCommand(options, canChooseCreateFile);
+    config = await createCommand(options, canChooseCreateFile);
+    config = [config];
   }
 
-  const outputPath = path.resolve(paths.currentPath, cfg.output.path);
-  const entryDirPath = path.resolve(paths.currentPath, cfg.entry.path);
+  config.forEach((cfg) => {
+    const entryDirPath = path.resolve(paths.currentPath, cfg.entry.path);
+    const outputPath = path.resolve(paths.currentPath, cfg.output.path);
 
-  const isEntryDirExist = fs.existsSync(entryDirPath);
-  if (!isEntryDirExist) {
-    return std.error(BUILD.ERROR.ENTRY_DIR_NOT_EXIST);
-  }
+    const isEntryDirExist = fs.existsSync(entryDirPath);
+    if (!isEntryDirExist) {
+      return std.error(BUILD.ERROR.ENTRY_DIR_NOT_EXIST);
+    }
 
-  let exportStatement = [];
+    let exportStatement = [];
 
-  let getExportStatement = cfg.moduleType === CONFIG.ES_MODULE ? getEsModuleStatement : getCommonjsStatement;
+    let getExportStatement = cfg.moduleType === CONFIG.ES_MODULE ? getEsModuleStatement : getCommonjsStatement;
 
-  try {
-    exportStatement = getExportStatement(
-      outputPath,
-      getResource(entryDirPath, { ignorePath: cfg.ignorePath })
-    );
-  } catch (e) {
-    return std.error(e);
-  }
-  if (exportStatement.length === '') {
-    return std.error(BUILD.ERROR.NO_NEED_BUILD);
-  }
+    try {
+      exportStatement = getExportStatement(
+        outputPath,
+        getResource(entryDirPath, { ignorePath: cfg.ignorePath, ignoreFile: cfg.ignoreFile })
+      );
+    } catch (e) {
+      return std.error(e);
+    }
+    if (exportStatement.length === '') {
+      return std.error(BUILD.ERROR.NO_NEED_BUILD);
+    }
 
-  const filename = regexp.extname.test(path.extname(cfg.output.filename)) ? cfg.output.filename : `${cfg.output.filename}.js`;
+    const filename = regexp.extname.test(path.extname(cfg.output.filename)) ? cfg.output.filename : `${cfg.output.filename}.js`;
 
-  const outputFilePath = path.resolve(outputPath, filename);
+    const outputFilePath = path.resolve(outputPath, filename);
 
-  fs.writeFileSync(outputFilePath, exportStatement, { encoding: 'utf8' });
+    fs.writeFileSync(outputFilePath, exportStatement, { encoding: 'utf8' });
+  });
 
   std.success(BUILD.SUCCESS.FINISH_BUILD);
 }

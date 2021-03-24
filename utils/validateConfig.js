@@ -3,8 +3,7 @@ const std = require('std-terminal-logger');
 const ERROR = require('../dict/utils/ERROR');
 const CONFIG = require('../dict/common/CONFIG');
 
-// Verify configuration file
-function validateConfig(cfg) {
+function validateRule(cfg) {
   if (cfg) {
     let result = true;
 
@@ -68,6 +67,15 @@ function validateConfig(cfg) {
 
   std.error(ERROR.CONFIG_NOT_EXIST);
   return false;
+}
+
+// Verify configuration file
+function validateConfig(cfg) {
+  if (!Array.isArray(cfg)) {
+    cfg = [cfg];
+  }
+
+  return cfg.some(cfgItem => validateRule(cfgItem));
 }
 
 module.exports = validateConfig;

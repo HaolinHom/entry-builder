@@ -65,10 +65,10 @@ function getResource(basePath, options = {}) {
     options = {};
   }
   if (!Array.isArray(options.ignoreFile)) {
-    options.ignoreFile = [];
+    options.ignoreFile = [options.ignoreFile];
   }
   if (!Array.isArray(options.ignorePath)) {
-    options.ignorePath = [];
+    options.ignorePath = [options.ignorePath];
   }
   options.basePath = basePath;
 
