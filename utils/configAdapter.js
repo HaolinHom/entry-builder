@@ -1,7 +1,7 @@
 const { typeOf } = require('../utils/common');
 const CONFIG = require('../dict/common/CONFIG');
 
-function configAdapter(cfg) {
+function adapter(cfg) {
   if (typeOf(cfg.entry) === 'string') {
     cfg.entry = {
       path: cfg.entry,
@@ -16,6 +16,16 @@ function configAdapter(cfg) {
   } else if (typeOf(cfg.output.filename) === 'undefined') {
     cfg.output.filename = CONFIG.DEFAULT_OUTPUT_FILENAME;
   }
+
+  return cfg;
+}
+
+function configAdapter(cfg) {
+  if (!Array.isArray(cfg)) {
+    cfg = [cfg];
+  }
+
+  cfg.forEach((cfgItem) => adapter(cfgItem));
 
   return cfg;
 }
